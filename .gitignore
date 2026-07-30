@@ -1,0 +1,72 @@
+# ======================
+# Node / Vite
+# ======================
+music-catalog-frontend/node_modules/
+music-catalog-frontend/dist/
+music-catalog-frontend/dist-ssr/
+music-catalog-frontend/*.local
+
+# ======================
+# Spring Boot / Maven
+# ======================
+music-catalog-backend/target/
+music-catalog-backend/build/
+music-catalog-backend/.mvn/wrapper/maven-wrapper.jar
+
+# ======================
+# IDEs
+# ======================
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.factorypath
+.settings/
+.springBeans
+.sts4-cache/
+
+# ======================
+# OS
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Logs
+# ======================
+logs/
+*.log
+*.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ======================
+# Environment Files
+# ======================
+music-catalog-frontend/.env
+music-catalog-frontend/.env.local
+music-catalog-frontend/.env.production
+music-catalog-backend/.env
+
+# ======================
+# Firebase Secrets
+# ======================
+music-catalog-backend/config/firebase.json
+music-catalog-backend/src/main/resources/firebase.json
+music-catalog-backend/src/main/resources/firebase/firebase-service-account.json
+
+# ======================
+# Java
+# ======================
+*.class
+
+# ======================
+# Coverage
+# ======================
+coverage/

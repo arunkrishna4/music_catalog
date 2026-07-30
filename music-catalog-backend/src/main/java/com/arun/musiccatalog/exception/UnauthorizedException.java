@@ -1,0 +1,8 @@
+package com.arun.musiccatalog.exception;
+
+public class UnauthorizedException extends RuntimeException {
+
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}

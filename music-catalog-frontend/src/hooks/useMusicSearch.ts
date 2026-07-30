@@ -1,0 +1,107 @@
+import { useState, type FormEvent } from "react";
+import { searchMusic, type SearchType } from "../services/search";
+
+import { addAlbumToLibrary } from "../services/library";
+import type { Album } from "../data/musicCatalog";
+
+export function useMusicSearch() {
+  const [query, setQuery] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>("Album");
+  const [hasSearched, setHasSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<Album[]>([]);
+  const [savingAlbumId, setSavingAlbumId] = useState<string | null>(null);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarType, setSnackbarType] = useState<
+    "success" | "error"
+  >("success");
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (!query.trim()) return;
+
+    setHasSearched(true);
+    setLoading(true);
+    setResults([]);
+
+    try {
+      const data = await searchMusic(query, searchType);
+
+      const mappedResults: Album[] = data.map((album) => ({
+        id: Number(album.appleCatalogId),
+        title: album.title,
+        artist: album.artistName,
+        genre: album.genre,
+        year: new Date(album.releaseDate).getFullYear(),
+        tracks: album.trackCount,
+        artwork: album.artworkUrl.replace("100x100bb", "600x600bb"),
+        songs: [],
+      }));
+
+      setResults(mappedResults);
+    } catch (error) {
+      console.error(error);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addToLibrary = async (album: Album) => {
+
+    try {
+
+      setSavingAlbumId(album.id.toString());
+
+      await addAlbumToLibrary({
+        appleCatalogId: album.id.toString(),
+        title: album.title,
+        artistName: album.artist,
+        genre: album.genre,
+        releaseDate: `${album.year}-01-01`,
+        trackCount: album.tracks,
+        artworkUrl: album.artwork,
+        userRating: null,
+        userNotes: null
+      });
+
+      // toast.success("Album added to your library!");
+      setSnackbarType("success");
+      setSnackbarMessage("Album added to your library");
+      setSnackbarOpen(true);
+
+    } catch (error) {
+
+      console.error(error);
+      // toast.error("Failed to add album.");
+      setSnackbarType("error");
+      setSnackbarMessage("Failed to add album");
+      setSnackbarOpen(true);
+
+    } finally {
+
+      setSavingAlbumId(null);
+
+    }
+  };
+
+  return {
+    query,
+    searchType,
+    hasSearched,
+    loading,
+    results,
+    savingAlbumId,
+    setQuery,
+    setSearchType,
+    handleSubmit,
+    addToLibrary,
+    snackbarOpen,
+    snackbarMessage,
+    snackbarType,
+    setSnackbarOpen
+  };
+}
