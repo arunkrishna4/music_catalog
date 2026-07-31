@@ -345,15 +345,37 @@ http://localhost:5173
 
 # 📌 Design Decisions & Trade-offs
 
-During development, several architectural decisions were made to balance functionality, maintainability, and development speed.
+Several architectural decisions were made to balance functionality, maintainability, performance, and development effort throughout the project.
 
-### Collaboration-aware Artist Analytics
+### 🤖 On-Demand AI Recommendations
 
-Instead of treating collaboration strings as a single artist, artist names are parsed and counted individually. This produces more accurate statistics when multiple artists appear on the same album.
+AI recommendations are generated only when the user explicitly requests them instead of automatically loading with the Analytics dashboard.
 
-### AI Recommendation Strategy
+**Trade-off:** This reduces unnecessary Gemini API calls, improves dashboard loading performance, and minimizes API usage. The downside is that users need one additional click to generate recommendations.
 
-The application does not ask Gemini to search the internet. Instead, it sends only the user's saved library, allowing recommendations to be generated solely from the user's listening preferences. This results in personalized, context-aware suggestions while keeping the prompt concise.
+---
+
+### 🎤 Collaboration-aware Artist Analytics
+
+Albums featuring multiple artists are parsed into individual artist names rather than treating the entire collaboration string as a single artist.
+
+**Trade-off:** This produces more accurate artist rankings and analytics, but requires additional parsing logic during analytics generation.
+
+---
+
+### ⚙️ Backend-driven Analytics
+
+All analytics calculations are performed on the Spring Boot backend instead of the React frontend.
+
+**Trade-off:** Centralizing business logic ensures consistent results, keeps the frontend lightweight, and makes future maintenance easier. However, it shifts additional processing responsibility to the backend.
+
+---
+
+### 🧠 AI Recommendation Strategy
+
+The Gemini API receives only the user's saved music library instead of performing external searches or using additional online metadata.
+
+**Trade-off:** Recommendations remain personalized, privacy-focused, and cost-efficient while keeping prompts concise. However, recommendations are limited to patterns inferred from the user's existing collection.
 
 ---
 
