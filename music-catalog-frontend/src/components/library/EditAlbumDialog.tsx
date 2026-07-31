@@ -37,10 +37,11 @@ export function EditAlbumDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm" onClick={onCancel}>
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+
+        className="w-full max-w-4xl  overflow-hidden rounded-5xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200"
       >
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 p-6">
           <div>
@@ -99,11 +100,10 @@ export function EditAlbumDialog({
                     aria-label={`Set rating to ${value} stars`}
                   >
                     <Star
-                      className={`h-5 w-5 ${
-                        value <= rating
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-slate-300"
-                      }`}
+                      className={`h-5 w-5 ${value <= rating
+                        ? "fill-amber-400 text-amber-400"
+                        : "text-slate-300"
+                        }`}
                       aria-hidden="true"
                     />
                   </button>

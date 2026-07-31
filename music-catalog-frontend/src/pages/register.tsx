@@ -10,6 +10,8 @@ import {
 } from "../components/auth/AuthComponents";
 import { Button } from "../components/ui/button";
 import { register } from "../services/auth";
+import { useNavigate } from "react-router-dom";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
@@ -19,20 +21,30 @@ export default function Register() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [authError, setAuthError] = useState("");
+
+  const navigate = useNavigate();
+
+  const [successDialog, setSuccessDialog] = useState(false);
+
+  const emailRegex = /\S+@\S+\.\S+/;
+
   const passwordMismatch =
     submitted &&
     password.length > 0 &&
     confirmPassword.length > 0 &&
     password !== confirmPassword;
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     setSubmitted(true);
+    setAuthError("");
 
     if (
       !fullName.trim() ||
       !email.trim() ||
+      !emailRegex.test(email) ||
       !password ||
       !confirmPassword ||
       passwordMismatch
@@ -43,10 +55,24 @@ export default function Register() {
     try {
       setLoading(true);
 
-      await register(fullName, email, password);
+      await register(fullName.trim(), email.trim(), password);
+
+      // Clear form
+      setFullName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setSubmitted(false);
+
+      // Open success dialog
+      setSuccessDialog(true);
 
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setAuthError(error.message);
+      } else {
+        setAuthError("Something went wrong.");
+      }
     } finally {
       setLoading(false);
     }
@@ -66,7 +92,10 @@ export default function Register() {
             type="text"
             placeholder="John Doe"
             value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            onChange={(e) => {
+              setFullName(e.target.value);
+              setAuthError("");
+            }}
             autoComplete="name"
             error={
               submitted && !fullName.trim()
@@ -81,11 +110,18 @@ export default function Register() {
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setAuthError("");
+            }}
             autoComplete="email"
             error={
-              submitted && !email.trim()
-                ? "Email is required."
+              submitted
+                ? !email.trim()
+                  ? "Email is required."
+                  : !emailRegex.test(email)
+                    ? "Please enter a valid email address."
+                    : undefined
                 : undefined
             }
           />
@@ -94,7 +130,10 @@ export default function Register() {
             label="Password"
             placeholder="Create a password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setAuthError("");
+            }}
             autoComplete="new-password"
             error={
               submitted && !password
@@ -107,7 +146,10 @@ export default function Register() {
             label="Confirm Password"
             placeholder="Confirm your password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setAuthError("");
+            }}
             autoComplete="new-password"
             error={
               submitted && !confirmPassword
@@ -117,6 +159,12 @@ export default function Register() {
                   : undefined
             }
           />
+
+          {authError && (
+            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+              {authError}
+            </p>
+          )}
 
           <Button
             type="submit"
@@ -130,6 +178,19 @@ export default function Register() {
             prompt="Already registered?"
             action="Login"
             href="/"
+          />
+          <ConfirmDialog
+            open={successDialog}
+            title="Account Created"
+            description="Your account has been created successfully. You can now login."
+            confirmText="Go to Login"
+            cancelText=""
+            loading={false}
+            onConfirm={() => navigate("/")}
+            onCancel={() => {
+              setSuccessDialog(false);
+              navigate("/");
+            }}
           />
         </form>
       </AuthCard>

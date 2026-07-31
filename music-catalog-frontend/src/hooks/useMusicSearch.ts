@@ -7,6 +7,7 @@ import type { Album } from "../data/musicCatalog";
 export function useMusicSearch() {
   const [query, setQuery] = useState("");
   const [searchType, setSearchType] = useState<SearchType>("Album");
+  const [currentSearchedType, setCurrentSearchedType] = useState<SearchType>("Album");
   const [hasSearched, setHasSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<Album[]>([]);
@@ -26,6 +27,7 @@ export function useMusicSearch() {
     setHasSearched(true);
     setLoading(true);
     setResults([]);
+    setCurrentSearchedType(searchType);
 
     try {
       const data = await searchMusic(query, searchType);
@@ -91,6 +93,7 @@ export function useMusicSearch() {
   return {
     query,
     searchType,
+    currentSearchedType,
     hasSearched,
     loading,
     results,

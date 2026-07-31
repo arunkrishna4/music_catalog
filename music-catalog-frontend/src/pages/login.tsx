@@ -21,19 +21,31 @@ export default function Login() {
     const [authError, setAuthError] = useState("");
     const navigate = useNavigate();
 
+    const emailRegex = /\S+@\S+\.\S+/;
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmitted(true);
         setAuthError("");
 
-        if (!email.trim() || !password) return;
+        if (
+            !email.trim() ||
+            !emailRegex.test(email) ||
+            !password
+        ) {
+            return;
+        }
 
         try {
             setLoading(true);
 
             await login(email.trim(), password);
+            setEmail("");
+            setPassword("");
+            setSubmitted(false);
+            setAuthError("");
 
-            navigate("/library");
+            navigate("/search");
         } catch (error) {
             if (error instanceof Error) {
                 setAuthError(error.message);
@@ -59,11 +71,18 @@ export default function Login() {
                         placeholder="you@example.com"
                         value={email}
                         disabled={loading}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setAuthError("");
+                        }}
                         autoComplete="email"
                         error={
-                            submitted && !email.trim()
-                                ? "Email is required."
+                            submitted
+                                ? !email.trim()
+                                    ? "Email is required."
+                                    : !emailRegex.test(email)
+                                        ? "Please enter a valid email address."
+                                        : undefined
                                 : undefined
                         }
                     />
@@ -73,7 +92,10 @@ export default function Login() {
                         placeholder="Enter your password"
                         value={password}
                         disabled={loading}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            setAuthError("");
+                        }}
                         autoComplete="current-password"
                         error={
                             submitted && !password

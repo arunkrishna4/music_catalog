@@ -3,7 +3,6 @@ import { LibraryAlbumGrid } from "../components/library/LibraryAlbumGrid";
 import { LibraryFilters } from "../components/library/LibraryFilters";
 import { LibraryHeader } from "../components/library/LibraryHeader";
 import { LibraryMobileHeader } from "../components/library/LibraryMobileHeader";
-import { SummaryCards } from "../components/library/SummaryCards";
 import { EditAlbumDialog } from "../components/library/EditAlbumDialog";
 import { useLibrary } from "../hooks/useLibrary";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
@@ -12,18 +11,15 @@ import { Snackbar } from "../components/ui/Snackbar";
 export default function MyLibrary() {
   const {
     albums,
-    summary,
     query,
     genre,
     ratingFilter,
     sortOption,
-    viewMode,
     loading,
     setQuery,
     setGenre,
     setRatingFilter,
     setSortOption,
-    setViewMode,
     deleteLoading,
     albumToDelete,
     setAlbumToDelete,
@@ -48,12 +44,8 @@ export default function MyLibrary() {
           <section className="mt-8 lg:mt-0">
             <LibraryHeader
               sortOption={sortOption}
-              viewMode={viewMode}
               onSortChange={setSortOption}
-              onViewModeChange={setViewMode}
             />
-
-            <SummaryCards summary={summary} />
 
             <LibraryFilters
               query={query}
@@ -71,7 +63,6 @@ export default function MyLibrary() {
             <LibraryAlbumGrid
               albums={albums}
               loading={loading}
-              viewMode={viewMode}
               onDelete={(id) => {
                 const album = albums.find(a => a.id === id);
                 if (album) setAlbumToDelete(album);

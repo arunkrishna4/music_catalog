@@ -13,6 +13,7 @@ music-catalog-backend/target/
 music-catalog-backend/build/
 music-catalog-backend/.mvn/wrapper/maven-wrapper.jar
 
+
 # ======================
 # IDEs
 # ======================
@@ -27,6 +28,7 @@ music-catalog-backend/.mvn/wrapper/maven-wrapper.jar
 .settings/
 .springBeans
 .sts4-cache/
+.history/
 
 # ======================
 # OS
@@ -57,16 +59,36 @@ music-catalog-backend/.env
 # ======================
 # Firebase Secrets
 # ======================
-music-catalog-backend/config/firebase.json
-music-catalog-backend/src/main/resources/firebase.json
-music-catalog-backend/src/main/resources/firebase/firebase-service-account.json
+
+**/firebase.json
+**/*service-account*.json
 
 # ======================
 # Java
 # ======================
 *.class
+out/
 
 # ======================
 # Coverage
 # ======================
 coverage/
+
+# ======================
+# Environment
+# ======================
+
+.env
+.env.*
+
+music-catalog-backend/src/main/resources/application.properties
+
+
+
+
+
+
+
+
+music-catalog-backend/src/main/resources/application.properties
+music-catalog-backend/src/main/resources/application.properties

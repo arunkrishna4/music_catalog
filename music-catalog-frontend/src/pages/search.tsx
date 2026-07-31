@@ -10,6 +10,7 @@ export default function SearchMusic() {
   const {
     query,
     searchType,
+    currentSearchedType,
     hasSearched,
     loading,
     results,
@@ -56,6 +57,7 @@ export default function SearchMusic() {
               results={results}
               savingAlbumId={savingAlbumId}
               onAddToLibrary={addToLibrary}
+              searchType={currentSearchedType}
             />
           </section>
         </div>

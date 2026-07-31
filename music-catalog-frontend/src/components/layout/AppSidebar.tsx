@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 import { logout } from "../../services/auth";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
@@ -22,6 +23,7 @@ export function AppSidebar() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -47,7 +49,7 @@ export function AppSidebar() {
 
             <div>
               <h2 className="font-bold text-slate-900">Music Catalog</h2>
-              <p className="text-xs text-slate-500">Apple Music Explorer</p>
+
             </div>
           </div>
         </div>
@@ -58,10 +60,9 @@ export function AppSidebar() {
               key={item.label}
               to={item.href}
               className={({ isActive }) =>
-                `group relative flex h-12 items-center gap-3 rounded-xl px-4 text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? "bg-blue-50 text-[#2563EB]"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                `group relative flex h-12 items-center gap-3 rounded-xl px-4 text-sm font-medium transition-all duration-200 ${isActive
+                  ? "bg-blue-50 text-[#2563EB]"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`
               }
             >
@@ -72,9 +73,8 @@ export function AppSidebar() {
                   )}
 
                   <item.icon
-                    className={`h-5 w-5 transition-transform duration-200 ${
-                      isActive ? "" : "group-hover:scale-110"
-                    }`}
+                    className={`h-5 w-5 transition-transform duration-200 ${isActive ? "" : "group-hover:scale-110"
+                      }`}
                     aria-hidden="true"
                   />
 
@@ -93,7 +93,7 @@ export function AppSidebar() {
             />
 
             <p className="truncate text-sm font-semibold text-slate-900">
-              Arun Krishna
+              {user?.displayName || "Music Lover"}
             </p>
           </div>
 

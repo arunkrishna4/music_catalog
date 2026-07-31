@@ -1,7 +1,21 @@
+import { useState } from "react";
+import { AIInsightsCard } from "../components/analytics/AIInsightsCard";
+import { AnalyticsCharts } from "../components/analytics/AnalyticsCharts";
+import { AnalyticsEmptyState } from "../components/analytics/AnalyticsEmptyState";
+import { AnalyticsErrorState } from "../components/analytics/AnalyticsErrorState";
+import { AnalyticsHeader } from "../components/analytics/AnalyticsHeader";
+import { AnalyticsLoadingSkeleton } from "../components/analytics/AnalyticsLoadingSkeleton";
+import { AnalyticsSummaryCards } from "../components/analytics/AnalyticsSummaryCards";
 import { AppSidebar } from "../components/layout/AppSidebar";
 import { LibraryMobileHeader } from "../components/library/LibraryMobileHeader";
+import { useAnalytics } from "../hooks/useAnalytics";
+import { AIRecommendationDialog } from "../components/ai/AIRecommendationDialog";
 
 export default function Analytics() {
+  const { data, loading, error, isEmpty, refreshAnalytics } = useAnalytics();
+
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-slate-100">
       <AppSidebar />
@@ -11,16 +25,34 @@ export default function Analytics() {
           <LibraryMobileHeader />
 
           <section className="mt-8 lg:mt-0">
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-              <h1 className="text-3xl font-black text-slate-950 sm:text-4xl">
-                Analytics
-              </h1>
-              <p className="mt-3 max-w-2xl text-base leading-7 text-slate-500">
-                Listening insights and library trends will live here.
-              </p>
-            </div>
+            {loading ? (
+              <AnalyticsLoadingSkeleton />
+            ) : error ? (
+              <>
+                <AnalyticsHeader onRefresh={refreshAnalytics} loading={loading} />
+                <AnalyticsErrorState message={error} onRetry={refreshAnalytics} />
+              </>
+            ) : isEmpty || !data ? (
+              <>
+                <AnalyticsHeader onRefresh={refreshAnalytics} loading={loading} />
+                <AnalyticsEmptyState />
+              </>
+            ) : (
+              <>
+                <AnalyticsHeader onRefresh={refreshAnalytics} loading={loading} />
+                <AnalyticsSummaryCards summary={data} />
+                <AIInsightsCard analytics={data} onGenerate={() => setAiDialogOpen(true)} />
+                <AnalyticsCharts data={data} />
+
+              </>
+            )}
           </section>
         </div>
+
+        <AIRecommendationDialog
+          open={aiDialogOpen}
+          onClose={() => setAiDialogOpen(false)}
+        />
       </main>
     </div>
   );

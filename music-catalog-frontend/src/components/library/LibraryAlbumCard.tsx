@@ -11,6 +11,8 @@ type LibraryAlbumCardProps = {
 };
 
 export function LibraryAlbumCard({ album, viewMode, onDelete, onEdit }: LibraryAlbumCardProps) {
+  const hasRatingOrNotes = album.rating > 0 || album.notes.trim().length > 0;
+
   if (viewMode === "list") {
     return (
       <article className="group flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-slate-200/80 md:flex-row md:items-center">
@@ -29,12 +31,20 @@ export function LibraryAlbumCard({ album, viewMode, onDelete, onEdit }: LibraryA
             <GenreBadge genre={album.genre} />
           </div>
 
-          <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
-            {album.notes}
-          </p>
-
-          <RatingStars rating={album.rating} className="mt-3" />
-
+          {hasRatingOrNotes ? (
+            <>
+              <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
+                {album.notes}
+              </p>
+              <RatingStars rating={album.rating} className="mt-3" />
+            </>
+          ) : (
+            <div className="mt-3 flex min-h-[2.5rem] items-center justify-center rounded-xl bg-slate-50 px-4 py-2 text-center">
+              <p className="text-sm leading-6 text-slate-400">
+                No rating or notes yet — click edit to add yours.
+              </p>
+            </div>
+          )}
         </div>
 
         <AlbumActions album={album} onDelete={onDelete} onEdit={onEdit} />
@@ -52,31 +62,40 @@ export function LibraryAlbumCard({ album, viewMode, onDelete, onEdit }: LibraryA
             <h3 className="truncate text-base font-black text-slate-950">
               {album.title}
             </h3>
-            <p className=" truncate text-sm font-semibold text-slate-500">
+            <p className="truncate text-sm font-semibold text-slate-500">
               {album.artist}
             </p>
           </div>
           <GenreBadge genre={album.genre} />
         </div>
 
-        <div className=" flex items-center justify-between text-sm text-slate-500">
+        <div className="flex items-center justify-between text-sm text-slate-500">
           <span>{album.year}</span>
           <span>{album.tracks} tracks</span>
         </div>
 
-        <RatingStars rating={album.rating} />
+        {hasRatingOrNotes ? (
+          <>
+            <div className="h-5 flex items-center">
+              <RatingStars rating={album.rating} />
+            </div>
+            <p className="line-clamp-2 min-h-[2.5rem] text-md leading-6 text-slate-500">
+              {album.notes}
+            </p>
+          </>
+        ) : (
+          <div className="flex min-h-[5rem] items-center justify-center rounded-xl bg-slate-50 px-4 text-center">
+            <p className="text-sm leading-6 text-slate-400">
+              No rating or notes yet — click edit to add yours.
+            </p>
+          </div>
+        )}
 
-        <p className=" line-clamp-2 min-h-12 text-sm leading-6 text-slate-500">
-          {album.notes}
-        </p>
-
-        <div className="-mt-6">
-          <AlbumActions
-            album={album}
-            onDelete={onDelete}
-            onEdit={onEdit}
-          />
-        </div>
+        <AlbumActions
+          album={album}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
       </div>
     </article>
   );
@@ -91,9 +110,7 @@ function Artwork({
 }) {
   return (
     <div
-      className={`group relative overflow-hidden ${compact
-        ? "h-24 w-24 shrink-0 rounded-xl"
-        : "aspect-[4/3] rounded-t-2xl"
+      className={`group relative overflow-hidden ${compact ? "h-24 w-24 shrink-0 rounded-xl" : "aspect-[4/3] rounded-t-2xl"
         }`}
     >
       <img
@@ -143,6 +160,8 @@ function RatingStars({
   rating: number;
   className?: string;
 }) {
+  if (!rating || rating <= 0) return null;
+
   return (
     <div
       className={`flex items-center gap-1 ${className}`}
@@ -151,9 +170,7 @@ function RatingStars({
       {[1, 2, 3, 4, 5].map((value) => (
         <Star
           key={value}
-          className={`h-4 w-4 ${value <= rating
-            ? "fill-amber-400 text-amber-400"
-            : "fill-slate-100 text-slate-300"
+          className={`h-5 w-5 ${value <= rating ? "fill-amber-400 text-amber-400" : "fill-slate-100 text-slate-300"
             }`}
           aria-hidden="true"
         />
@@ -168,11 +185,7 @@ type AlbumActionsProps = {
   onEdit: (album: LibraryAlbum) => void;
 };
 
-function AlbumActions({
-  album,
-  onDelete,
-  onEdit,
-}: AlbumActionsProps) {
+function AlbumActions({ album, onDelete, onEdit }: AlbumActionsProps) {
   return (
     <div className="flex items-center gap-3">
       <Button

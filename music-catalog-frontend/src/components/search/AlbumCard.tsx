@@ -1,9 +1,9 @@
 import { Calendar, Disc3, Music2 } from "lucide-react";
 
-import { type Album } from "../../data/musicCatalog";
+import { type Album, type SearchType } from "../../data/musicCatalog";
 import { Button } from "../ui/button";
 
-export function AlbumCard({ album, savingAlbumId, onAddToLibrary }: { album: Album, savingAlbumId: string | null, onAddToLibrary: (album: Album) => void }) {
+export function AlbumCard({ album, savingAlbumId, onAddToLibrary, searchType }: { album: Album, savingAlbumId: string | null, onAddToLibrary: (album: Album) => void, searchType?: SearchType }) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Album Cover */}
@@ -67,10 +67,12 @@ export function AlbumCard({ album, savingAlbumId, onAddToLibrary }: { album: Alb
 
         </div>
 
-        {/* Button */}
-        <Button className="h-10 w-full rounded-xl" onClick={() => onAddToLibrary(album)} disabled={savingAlbumId === album.id.toString()}>
-          {savingAlbumId === album.id.toString() ? "Adding..." : "+ Add to Library"}
-        </Button>
+        {/* Button - rendered only when searchType is "Album" (or not specified) */}
+        {(!searchType || searchType === "Album") && (
+          <Button className="h-10 w-full rounded-xl" onClick={() => onAddToLibrary(album)} disabled={savingAlbumId === album.id.toString()}>
+            {savingAlbumId === album.id.toString() ? "Adding..." : "+ Add to Library"}
+          </Button>
+        )}
 
       </div>
     </article>
