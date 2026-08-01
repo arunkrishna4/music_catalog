@@ -25,8 +25,8 @@ public class ItunesService {
         String entity;
 
         if ("artist".equalsIgnoreCase(type)) {
-            entity = "musicArtist";
-        } else if ("song".equalsIgnoreCase(type)) {
+    entity = "album";
+} else if ("song".equalsIgnoreCase(type)) {
             entity = "song";
         } else {
             entity = "album";

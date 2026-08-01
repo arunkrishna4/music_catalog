@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { searchMusic, type SearchType } from "../services/search";
+import axios from "axios";
 
 import { addAlbumToLibrary } from "../services/library";
 import type { Album } from "../data/musicCatalog";
@@ -52,10 +53,10 @@ export function useMusicSearch() {
     }
   };
 
+
+
   const addToLibrary = async (album: Album) => {
-
     try {
-
       setSavingAlbumId(album.id.toString());
 
       await addAlbumToLibrary({
@@ -67,26 +68,30 @@ export function useMusicSearch() {
         trackCount: album.tracks,
         artworkUrl: album.artwork,
         userRating: null,
-        userNotes: null
+        userNotes: null,
       });
 
-      // toast.success("Album added to your library!");
       setSnackbarType("success");
       setSnackbarMessage("Album added to your library");
       setSnackbarOpen(true);
 
     } catch (error) {
-
       console.error(error);
-      // toast.error("Failed to add album.");
+
+      let message = "Failed to add album.";
+
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.message ?? message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
       setSnackbarType("error");
-      setSnackbarMessage("Failed to add album");
+      setSnackbarMessage(message);
       setSnackbarOpen(true);
 
     } finally {
-
       setSavingAlbumId(null);
-
     }
   };
 

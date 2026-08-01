@@ -31,9 +31,8 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         
         
-        System.out.println("=== FIREBASE FILTER ===");//to be removed
         String header = request.getHeader("Authorization");
-        System.out.println("Authorization Header: " + header);//to be removed
+        
 
         if (header != null && header.startsWith("Bearer ")) {
 
@@ -44,7 +43,7 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 FirebaseToken decodedToken =
                         firebaseAuthService.verifyToken(token);
 
-                System.out.println("UID: " + decodedToken.getUid());
+                
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(

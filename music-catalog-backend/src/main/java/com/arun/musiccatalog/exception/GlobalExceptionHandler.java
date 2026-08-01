@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import com.arun.musiccatalog.exception.DuplicateAlbumException;
+import org.springframework.http.HttpStatus;
 
 
 
@@ -25,6 +26,22 @@ public ResponseEntity<ApiResponse<Object>> handleUnauthorized(UnauthorizedExcept
     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 }
 
+        @ExceptionHandler(DuplicateAlbumException.class)
+public ResponseEntity<ApiResponse<Void>> handleDuplicateAlbum(
+        DuplicateAlbumException ex
+) {
+
+    return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(
+                    new ApiResponse<>(
+                            false,
+                            ex.getMessage(),
+                            null
+                    )
+            );
+}
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleException(Exception ex){
 
@@ -37,5 +54,7 @@ public ResponseEntity<ApiResponse<Object>> handleUnauthorized(UnauthorizedExcept
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    
 
 }

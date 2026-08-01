@@ -95,11 +95,11 @@ public class LibraryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteAlbum(@PathVariable String id) throws Exception {
+    public ResponseEntity<ApiResponse<Void>> deleteAlbum(@PathVariable String id, Authentication authentication) throws Exception {
 
-        albumService.deleteAlbum(id);
+        albumService.deleteAlbum(id, authentication.getName());
 
-        return ResponseEntity.ok(
+        return ResponseEntity.ok(       
                 new ApiResponse<>(
                         true,
                         "Album deleted successfully",

@@ -82,4 +82,19 @@ public class AlbumRepository {
                 .get();
     }
 
+    //checking if the album already exists in the db for the user
+    public boolean existsByUserAndAppleCatalogId(
+        String userId,
+        String appleCatalogId
+) throws Exception {
+
+    QuerySnapshot snapshot = firestore.collection(COLLECTION_NAME)
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("appleCatalogId", appleCatalogId)
+            .get()
+            .get();
+
+    return !snapshot.isEmpty();
+}
+
 }

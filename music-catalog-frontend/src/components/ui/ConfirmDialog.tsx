@@ -28,9 +28,8 @@ export function ConfirmDialog({
             <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
 
                 <div className="flex items-center gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-red-100">
-                        <TriangleAlert className="h-6 w-6 text-red-600" />
-                    </div>
+
+                    <TriangleAlert className="h-15 w-15 text-red-600" />
 
                     <div>
                         <h2 className="text-lg font-bold text-slate-900">

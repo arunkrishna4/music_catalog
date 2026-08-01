@@ -7,6 +7,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import org.springframework.stereotype.Service;
 import com.arun.musiccatalog.exception.ResourceNotFoundException;
 import com.arun.musiccatalog.dto.UpdateAlbumRequest;
+import com.arun.musiccatalog.exception.DuplicateAlbumException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,11 @@ public class AlbumService {
 
     //creating album
     public Album createAlbum(CreateAlbumRequest request, String userId) throws Exception {
+
+        // Prevent duplicate albums
+        if (albumRepository.existsByUserAndAppleCatalogId(userId, request.getAppleCatalogId())) {
+            throw new DuplicateAlbumException("Album already exists in your library");
+        }
 
         Album album = Album.builder()
         .appleCatalogId(request.getAppleCatalogId())
@@ -102,7 +108,18 @@ public class AlbumService {
     }
 
     //deleting an album
-    public void deleteAlbum(String id) throws Exception {
-        albumRepository.delete(id);
+    public void deleteAlbum(String id, String userId) throws Exception {
+
+    Album album = albumRepository.findById(id);
+
+    if (album == null) {
+        throw new ResourceNotFoundException("Album not found");
     }
+
+    if (!album.getUserId().equals(userId)) {
+        throw new RuntimeException("You are not authorized to delete this album");
+    }
+
+    albumRepository.delete(id);
+}
 }

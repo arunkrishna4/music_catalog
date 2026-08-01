@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Mail, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import {
   AuthCard,
@@ -10,8 +11,7 @@ import {
 } from "../components/auth/AuthComponents";
 import { Button } from "../components/ui/button";
 import { register } from "../services/auth";
-import { useNavigate } from "react-router-dom";
-import { ConfirmDialog } from "../components/ui/ConfirmDialog";
+import { Snackbar } from "../components/ui/Snackbar";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
@@ -21,11 +21,13 @@ export default function Register() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [authError, setAuthError] = useState("");
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    type: "success" | "error";
+  }>({ open: false, message: "", type: "success" });
 
   const navigate = useNavigate();
-
-  const [successDialog, setSuccessDialog] = useState(false);
 
   const emailRegex = /\S+@\S+\.\S+/;
 
@@ -39,7 +41,6 @@ export default function Register() {
     event.preventDefault();
 
     setSubmitted(true);
-    setAuthError("");
 
     if (
       !fullName.trim() ||
@@ -57,22 +58,23 @@ export default function Register() {
 
       await register(fullName.trim(), email.trim(), password);
 
-      // Clear form
       setFullName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       setSubmitted(false);
 
-      // Open success dialog
-      setSuccessDialog(true);
-
+      setSnackbar({
+        open: true,
+        message: "Account created! Taking you to login...",
+        type: "success",
+      });
     } catch (error) {
-      if (error instanceof Error) {
-        setAuthError(error.message);
-      } else {
-        setAuthError("Something went wrong.");
-      }
+      setSnackbar({
+        open: true,
+        message: error instanceof Error ? error.message : "Something went wrong.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -80,22 +82,15 @@ export default function Register() {
 
   return (
     <AuthLayout>
-      <AuthCard
-        title="Create your account"
-
-      >
+      <AuthCard title="Create your account">
         <form className="space-y-5" onSubmit={handleSubmit} noValidate>
-
           <TextInput
             label="Full Name"
             icon={User}
             type="text"
             placeholder="John Doe"
             value={fullName}
-            onChange={(e) => {
-              setFullName(e.target.value);
-              setAuthError("");
-            }}
+            onChange={(e) => setFullName(e.target.value)}
             autoComplete="name"
             error={
               submitted && !fullName.trim()
@@ -110,10 +105,7 @@ export default function Register() {
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setAuthError("");
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
             error={
               submitted
@@ -130,26 +122,16 @@ export default function Register() {
             label="Password"
             placeholder="Create a password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setAuthError("");
-            }}
+            onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
-            error={
-              submitted && !password
-                ? "Password is required."
-                : undefined
-            }
+            error={submitted && !password ? "Password is required." : undefined}
           />
 
           <PasswordInput
             label="Confirm Password"
             placeholder="Confirm your password"
             value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              setAuthError("");
-            }}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
             error={
               submitted && !confirmPassword
@@ -160,12 +142,6 @@ export default function Register() {
             }
           />
 
-          {authError && (
-            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
-              {authError}
-            </p>
-          )}
-
           <Button
             type="submit"
             disabled={loading}
@@ -174,26 +150,19 @@ export default function Register() {
             {loading ? "Creating account..." : "Create Account"}
           </Button>
 
-          <AuthFooter
-            prompt="Already registered?"
-            action="Login"
-            href="/"
-          />
-          <ConfirmDialog
-            open={successDialog}
-            title="Account Created"
-            description="Your account has been created successfully. You can now login."
-            confirmText="Go to Login"
-            cancelText=""
-            loading={false}
-            onConfirm={() => navigate("/")}
-            onCancel={() => {
-              setSuccessDialog(false);
-              navigate("/");
-            }}
-          />
+          <AuthFooter prompt="Already registered?" action="Login" href="/" />
         </form>
       </AuthCard>
+
+      <Snackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        type={snackbar.type}
+        onClose={() => {
+          setSnackbar((prev) => ({ ...prev, open: false }));
+          if (snackbar.type === "success") navigate("/");
+        }}
+      />
     </AuthLayout>
   );
 }
