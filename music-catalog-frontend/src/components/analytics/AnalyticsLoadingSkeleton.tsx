@@ -4,8 +4,7 @@ export function AnalyticsLoadingSkeleton() {
             {/* Header Skeleton */}
             <div className="h-14 w-64 rounded-xl bg-slate-200" />
 
-            {/* AI Card Skeleton */}
-            <div className="h-52 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" />
+
 
             {/* Summary Cards Skeleton */}
             <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
@@ -22,6 +21,9 @@ export function AnalyticsLoadingSkeleton() {
                     </div>
                 ))}
             </div>
+
+            {/* AI Card Skeleton */}
+            <div className="h-52 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" />
 
             {/* Charts Grid Skeleton */}
             <div className="grid gap-6 lg:grid-cols-2">
