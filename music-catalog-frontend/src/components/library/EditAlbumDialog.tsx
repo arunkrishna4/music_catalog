@@ -162,10 +162,7 @@ export function EditAlbumDialog({
             Cancel
           </Button>
           <Button type="submit" disabled={loading}>
-            {loading && (
-              <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
-            )}
-            Save
+            {loading ? "Saving..." : "Save"}
           </Button>
         </div>
       </form>
