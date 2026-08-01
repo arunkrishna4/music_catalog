@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { LoaderCircle, Star, X } from "lucide-react";
+import { Star, X } from "lucide-react";
 
 import { type LibraryAlbum } from "../../data/libraryCatalog";
 import { Button } from "../ui/button";
