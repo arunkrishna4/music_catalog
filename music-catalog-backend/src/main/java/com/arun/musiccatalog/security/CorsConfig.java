@@ -17,9 +17,9 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173",
-                "https://your-vercel-app.vercel.app"
-        ));
+        "http://localhost:5173",
+        "https://music-catalog-sigma.vercel.app"
+));
 
         configuration.setAllowedMethods(List.of(
                 "GET",
