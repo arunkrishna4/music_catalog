@@ -4,6 +4,9 @@ export function AnalyticsLoadingSkeleton() {
             {/* Header Skeleton */}
             <div className="h-14 w-64 rounded-xl bg-slate-200" />
 
+            {/* AI Card Skeleton */}
+            <div className="h-52 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" />
+
             {/* Summary Cards Skeleton */}
             <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
                 {[1, 2, 3, 4].map((i) => (
@@ -34,8 +37,7 @@ export function AnalyticsLoadingSkeleton() {
                 ))}
             </div>
 
-            {/* AI Card Skeleton */}
-            <div className="h-52 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" />
+
         </div>
     );
 }
