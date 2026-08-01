@@ -53,6 +53,28 @@ export function useMusicSearch() {
     }
   };
 
+  const searchMusic = async (searchQuery: string) => {
+    const trimmedQuery = searchQuery.trim();
+
+    if (!trimmedQuery) return;
+
+    setQuery(trimmedQuery);
+    setLoading(true);
+    setHasSearched(true);
+    setCurrentSearchedType(searchType);
+
+    try {
+      const data = await searchAlbums(trimmedQuery, searchType);
+
+      setResults(data);
+    } catch (error) {
+      console.error(error);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
 
   const addToLibrary = async (album: Album) => {

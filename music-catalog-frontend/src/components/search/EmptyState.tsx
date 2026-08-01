@@ -8,6 +8,8 @@ const suggestions = [
   "Imagine Dragons",
 ];
 
+
+
 export function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white py-16 px-6 shadow-sm shadow-slate-200/50 text-center">
@@ -30,16 +32,9 @@ export function EmptyState() {
           Try searching for
         </p>
 
-        <div className="flex flex-wrap justify-center gap-3">
-          {suggestions.map((item) => (
-            <button
-              key={item}
-              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-[#2563EB] hover:bg-blue-50 hover:text-[#2563EB]"
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+        <p className="text-sm text-slate-500">
+          {suggestions.join(" • ")}
+        </p>
       </div>
     </div>
   );

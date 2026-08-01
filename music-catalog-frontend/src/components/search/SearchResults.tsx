@@ -11,6 +11,7 @@ type SearchResultsProps = {
   savingAlbumId: string | null;
   onAddToLibrary: (album: Album) => void;
   searchType: SearchType;
+  onSearch: (query: string) => void;
 };
 
 export function SearchResults({
@@ -19,9 +20,10 @@ export function SearchResults({
   results,
   savingAlbumId,
   onAddToLibrary,
-  searchType
+  searchType,
+  onSearch
 }: SearchResultsProps) {
-  if (!hasSearched) return <EmptyState />;
+  if (!hasSearched) return <EmptyState onSearch={onSearch} />;
 
   if (loading) return <SkeletonCards />;
 
