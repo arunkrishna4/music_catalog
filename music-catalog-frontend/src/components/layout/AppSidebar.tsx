@@ -5,6 +5,7 @@ import {
   Music2,
   Search,
   UserCircle2Icon,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -19,7 +20,7 @@ const navItems = [
   { label: "Analytics", icon: BarChart3, href: "/analytics" },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const navigate = useNavigate();
@@ -40,8 +41,16 @@ export function AppSidebar() {
 
   return (
     <>
-      <aside className="fixed left-0 top-0 hidden h-screen w-64 border-r border-slate-200 bg-white lg:flex lg:flex-col">
-        <div className="border-b border-slate-100 px-6 py-7">
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 z-50 h-screen w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0 lg:flex ${isOpen ? "translate-x-0 flex" : "-translate-x-full hidden"}`}>
+        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-7">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2563EB] text-white shadow-sm">
               <Music2 className="h-5 w-5" aria-hidden="true" />
@@ -49,9 +58,12 @@ export function AppSidebar() {
 
             <div>
               <h2 className="font-bold text-slate-900">Music Catalog</h2>
-
             </div>
           </div>
+
+          <button onClick={onClose} className="p-1 -mr-2 text-slate-400 hover:text-slate-600 lg:hidden">
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
         </div>
 
         <nav className="mt-6 flex-1 space-y-2 px-4">
