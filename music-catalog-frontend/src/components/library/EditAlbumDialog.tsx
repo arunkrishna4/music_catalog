@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { LoaderCircle, Star, X } from "lucide-react";
 
 import { type LibraryAlbum } from "../../data/libraryCatalog";
@@ -19,8 +19,29 @@ export function EditAlbumDialog({
   onSave,
   onCancel,
 }: EditAlbumDialogProps) {
+  const dialogRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState("");
+
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dialogRef.current &&
+        !dialogRef.current.contains(event.target as Node)
+      ) {
+        onCancel();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open, onCancel]);
 
   useEffect(() => {
     if (!album) return;
@@ -37,10 +58,10 @@ export function EditAlbumDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm" >
       <form
         onSubmit={handleSubmit}
-
+        ref={dialogRef}
         className="w-full max-w-4xl  overflow-hidden rounded-5xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200"
       >
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 p-6">
