@@ -378,6 +378,15 @@ The Gemini API receives only the user's saved music library instead of performin
 **Trade-off:** Recommendations remain personalized, privacy-focused, and cost-efficient while keeping prompts concise. However, recommendations are limited to patterns inferred from the user's existing collection.
 
 ---
+## Live Demo
+
+Frontend:
+https://music-catalog-sigma.vercel.app
+
+Backend:
+https://music-catalog-backend-7exz.onrender.com
+
+---
 
 # 👨‍💻 Author
 
