@@ -33,9 +33,15 @@ export function LibraryAlbumCard({ album, viewMode, onDelete, onEdit }: LibraryA
 
           {hasRatingOrNotes ? (
             <>
-              <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
-                {album.notes}
+              <p
+                className={`mt-3 line-clamp-2 text-sm leading-6 ${album.notes.trim()
+                  ? "text-slate-500"
+                  : "italic text-slate-400"
+                  }`}
+              >
+                {album.notes.trim() || "No notes added"}
               </p>
+
               <RatingStars rating={album.rating} className="mt-3" />
             </>
           ) : (
@@ -79,8 +85,14 @@ export function LibraryAlbumCard({ album, viewMode, onDelete, onEdit }: LibraryA
             <div className="h-5 flex items-center">
               <RatingStars rating={album.rating} />
             </div>
-            <p className="line-clamp-2 min-h-[2.5rem] text-md leading-6 text-slate-500">
-              {album.notes}
+
+            <p
+              className={`line-clamp-2 min-h-[2.5rem] text-md leading-6 ${album.notes.trim()
+                ? "text-slate-500"
+                : "italic text-slate-400"
+                }`}
+            >
+              {album.notes.trim() || "No notes added"}
             </p>
           </>
         ) : (
