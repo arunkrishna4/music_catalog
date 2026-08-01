@@ -6,7 +6,7 @@ import {
     AuthCard,
     AuthFooter,
     AuthLayout,
-    ForgotPasswordLink,
+
     PasswordInput,
     TextInput,
 } from "../components/auth/AuthComponents";
